@@ -29,7 +29,7 @@ const Sidebar = ({ isCollapsed }) => {
   const closeModal = useCallback(() => setModalState(false), []);
 
   const projectData = () => {
-    axios.get('http://192.168.1.181:9000/projects/')
+    axios.get('https://leon-prod-ui.vercel.app/projects/')
       .then((res) => {
         setProjects(res.data);
       });

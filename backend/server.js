@@ -15,8 +15,8 @@ mongoose.connect(process.env.MONGODB_PATH, () => {
 }, (e) => console.log(e))
 
 
-const PORT = process.env.SERVER_PORT || 9000
-const origin = process.env.CORS_ORIGIN || 'http://192.168.1.181:3000'
+// const PORT = process.env.SERVER_PORT || 9000
+const origin = process.env.CORS_ORIGIN || 'https://leon-prod-ui.vercel.app'
 
 const app = express()
 
@@ -35,8 +35,8 @@ app.use("/api/users",userRoutes)
 // app.use("/api/auth", authRoutes);
 
 
-app.listen(PORT, () => {
-    console.log(`Your app is running in http://192.168.1.181:${PORT}`)
+app.listen(() => {
+    console.log(`Your app is running in https://leon-prod-ui.vercel.app`)
 })
 
 

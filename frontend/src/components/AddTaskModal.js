@@ -13,7 +13,7 @@ const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, t
 
     useEffect(() => {
         if (edit && isAddTaskModalOpen) {
-            axios.get(`http://192.168.1.181:9000/project/${projectId}/task/${taskId}`)
+            axios.get(`https://leon-prod-ui.vercel.app/project/${projectId}/task/${taskId}`)
                 .then((res) => {
                     setRequestor(res.data[0].task[0].requestor)
                     setTitle(res.data[0].task[0].title)
@@ -29,7 +29,7 @@ const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, t
     const handleSubmit = (e) => {
         e.preventDefault()
         if (!edit) {
-            axios.post(`http://192.168.1.181:9000/project/${projectId}/task`, { requestor, title, description: desc })
+            axios.post(`https://leon-prod-ui.vercel.app/project/${projectId}/task`, { requestor, title, description: desc })
                 .then((res) => {
                     setAddTaskModal(false)
                     toast.success('Task created successfully')
@@ -45,7 +45,7 @@ const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, t
                     }
                 })
         } else {
-            axios.put(`http://192.168.1.181:9000/project/${projectId}/task/${taskId}`, { requestor,  title, description: desc })
+            axios.put(`https://leon-prod-ui.vercel.app/project/${projectId}/task/${taskId}`, { requestor,  title, description: desc })
                 .then((res) => {
                     setAddTaskModal(false)
                     toast.success('Task is updated')
