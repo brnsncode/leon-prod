@@ -14,15 +14,34 @@ mongoose.connect(process.env.MONGODB_URI, () => {
 
 const app = express();
 
-const origin = 'https://leon-prod-ui.vercel.app'
-app.use(cors({
-    origin
-}));
+// Set up CORS with detailed handling
+const allowCors = (req, res, next) => {
+    const allowedOrigins = ['https://leon-prod-ui.vercel.app', 'https://another-origin-if-needed.com']; // Add other allowed origins if needed
+    const origin = req.headers.origin;
 
+    if (allowedOrigins.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    );
 
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end(); // Preflight request response
+    }
+    next(); // Proceed to the next middleware
+};
+
+app.use(allowCors); // Apply custom CORS middleware
+
+// Parse request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Define your routes
 app.use(projectRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
