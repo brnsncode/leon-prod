@@ -1,53 +1,40 @@
 import express from "express";
-import projectRoutes from './routes/index.js';
-import dotenv from 'dotenv';
+import projectRoutes from './routes/index.js'
+import dotenv from 'dotenv'
 import mongoose from "mongoose";
 import cors from "cors";
 import userRoutes from "./routes/users.js";
 import authRoutes from "./routes/auth.js";
 
-dotenv.config();
+dotenv.config()
+
+// const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
 
 mongoose.connect(process.env.MONGODB_URI, () => {
-    console.log('Connected to MongoDB');
-}, (e) => console.log(e));
+    console.log('connect');
+}, (e) => console.log(e))
 
-const app = express();
 
-const origin = [
-    "https://leon-prod-ui.vercel.app",  // Your frontend URL
-    "https://leon-prod.vercel.app"     // Your backend URL
-  ];
-  
-  app.use(
-    cors({
-      origin: (origin, callback) => {
-        if (!origin || origin.includes("vercel.app")) {
-          callback(null, true); // Allow only Vercel origins
-        } else {
-          callback(new Error("Not allowed by CORS"));
-        }
-      },
-      credentials: true, // Allow credentials if needed
-      methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-      allowedHeaders: [
-        "Content-Type",
-        "Authorization",
-        "X-Requested-With",
-        "Accept",
-        "Origin",
-      ],
-    })
-  );
+const PORT = process.env.SERVER_PORT || 9000
+const origin = process.env.CORS_ORIGIN //|| 'http://192.168.1.181:3000'
 
-// Parse request bodies
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const app = express()
 
-// Define your routes
-app.use(projectRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/users", userRoutes);
+app.use(cors({
+    origin
+}));
+app.use(express.json())
+app.use(express.urlencoded())
 
-// Export the app for Vercel
-export default app;
+app.use(projectRoutes)
+app.use("/api/auth", authRoutes)
+app.use("/api/users",userRoutes)
+
+// Auth routes
+// app.use("/api/users", userRoutes);
+// app.use("/api/auth", authRoutes);
+
+
+app.listen(PORT, () => {
+    console.log(`Your app is running in http://192.168.1.181:9000`)
+})
