@@ -19,7 +19,7 @@ const TaskModal = ({ isOpen, setIsOpen, id }) => {
 
     useEffect(() => {
         if (isOpen) {
-            axios.get(`https://leon-prod-ui.vercel.app/project/${id.projectId}/task/${id.id}`)
+            axios.get(`https://leon-prod.vercel.app:9000/project/${id.projectId}/task/${id.id}`)
                 .then((data) => {
                     setTaskData({ ...data.data[0].task[0] });
                     // console.log(taskData);

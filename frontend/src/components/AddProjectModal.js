@@ -12,7 +12,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
 
     useEffect(() => {
         if (edit && isModalOpen) {
-            axios.get(`https://leon-prod-ui.vercel.app/project/${id}`)
+            axios.get(`https://leon-prod.vercel.app:9000/project/${id}`)
                 .then((res) => {
                     setTitle(res.data[0].title)
                     setDesc(res.data[0].description)
@@ -27,7 +27,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
     const handleSubmit = (e) => {
         e.preventDefault()
         if (!edit) {
-            axios.post('https://leon-prod-ui.vercel.app/project/', { title, description: desc })
+            axios.post('https://leon-prod.vercel.app:9000/project/', { title, description: desc })
                 .then((res) => {
                     closeModal()
                     const customEvent = new CustomEvent('projectUpdate', { detail: { ...res.data } });
@@ -44,7 +44,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                     }
                 })
         } else {
-            axios.put(`https://leon-prod-ui.vercel.app/project/${id}`, { title, description: desc })
+            axios.put(`https://leon-prod.vercel.app:9000/project/${id}`, { title, description: desc })
                 .then((res) => {
                     closeModal()
                     const customEvent = new CustomEvent('projectUpdate', { detail: { ...res.data } });
