@@ -14,7 +14,7 @@ mongoose.connect(process.env.MONGODB_URI, () => {
 
 const app = express();
 
-const origin = process.env.CORS_ORIGIN || 'https://leon-prod-ui.vercel.app'
+const origin = 'https://leon-prod-ui.vercel.app'
 app.use(cors({
     origin
 }));
