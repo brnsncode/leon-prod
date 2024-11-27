@@ -1,45 +1,37 @@
 import express from "express";
-import projectRoutes from './routes/index.js'
-import dotenv from 'dotenv'
+import projectRoutes from './routes/index.js';
+import dotenv from 'dotenv';
 import mongoose from "mongoose";
 import cors from "cors";
 import userRoutes from "./routes/users.js";
 import authRoutes from "./routes/auth.js";
 
-dotenv.config()
-
-// const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
+dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URI, () => {
-    console.log('connect');
-}, (e) => console.log(e))
+    console.log('Connected to MongoDB');
+}, (e) => console.log(e));
 
+const app = express();
 
-const PORT = process.env.SERVER_PORT || 9000
-const origin = process.env.CORS_ORIGIN //|| 'http://192.168.1.181:3000'
-
-const app = express()
-
+const allowedOrigins = [process.env.CORS_ORIGIN, /\.vercel\.app$/];
 app.use(cors({
-    origin
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.some((pattern) => pattern.test(origin))) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
 }));
-app.use(express.json())
-app.use(express.urlencoded())
-
-app.use(projectRoutes)
-app.use("/api/auth", authRoutes)
-app.use("/api/users",userRoutes)
-
-// Auth routes
-// app.use("/api/users", userRoutes);
-// app.use("/api/auth", authRoutes);
 
 
-app.listen(PORT, () => {
-    console.log(`Your app is running in ${process.env.SERVER_URL}:${PORT}`)
-})
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+app.use(projectRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
-//Resolve connection issues
-//DELETE AFTER DONE:
-// set NODE_TLS_REJECT_UNAUTHORIZED=0
+// Export the app for Vercel
+export default app;

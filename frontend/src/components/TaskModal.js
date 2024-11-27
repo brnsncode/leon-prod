@@ -6,7 +6,7 @@ import toast from 'react-hot-toast'
 
 
 //first later capital in javascript ?
-const serverUrl = 'http://192.168.1.181:9000'
+const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
 
 const TaskModal = ({ isOpen, setIsOpen, id }) => {
     const [taskData, setTaskData] = useState('')

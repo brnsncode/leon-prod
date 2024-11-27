@@ -5,7 +5,7 @@ import BtnSecondary from './BtnSecondary'
 import axios from "axios"
 import toast from 'react-hot-toast'
 
-const serverUrl = 'http://192.168.1.181:9000'
+const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
 
 const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) => {
 
