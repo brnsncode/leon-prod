@@ -14,22 +14,9 @@ mongoose.connect(process.env.MONGODB_URI, () => {
 
 const app = express();
 
-const allowedOrigins = [
-    process.env.CORS_ORIGIN
-];
-
+const origin = process.env.CORS_ORIGIN || 'https://leon-prod-ui.vercel.app'
 app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.some((pattern) => {
-            if (typeof pattern === 'string') return pattern === origin;
-            return pattern.test(origin); // For regex patterns
-        })) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    credentials: true // Allow cookies if required
+    origin
 }));
 
 
