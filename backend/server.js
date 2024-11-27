@@ -10,13 +10,13 @@ dotenv.config()
 
 // const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
 
-mongoose.connect(process.env.MONGODB_PATH, () => {
+mongoose.connect(process.env.MONGODB_URI, () => {
     console.log('connect');
 }, (e) => console.log(e))
 
 
 const PORT = process.env.SERVER_PORT || 9000
-const origin = process.env.CORS_ORIGIN || 'https://leon-prod-ui.vercel.app'
+const origin = process.env.CORS_ORIGIN //|| 'http://192.168.1.181:3000'
 
 const app = express()
 
@@ -36,7 +36,7 @@ app.use("/api/users",userRoutes)
 
 
 app.listen(PORT, () => {
-    console.log(`Your app is running in https://leon-prod.vercel.app:${PORT}`)
+    console.log(`Your app is running in ${process.env.SERVER_URL}:${PORT}`)
 })
 
 

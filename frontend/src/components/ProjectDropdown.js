@@ -4,11 +4,13 @@ import axios from "axios"
 import toast from 'react-hot-toast'
 import AddProjectModal from './AddProjectModal'
 
+const serverUrl = 'http://192.168.1.181:9000'
+
 const ProjectDropdown = ({ id, navigate }) => {
     const [isModalOpen, setModalState] = useState(false)
     const handleDelete = async () => {
         try {
-            const data = await axios.delete(`https://leon-prod.vercel.app:9000/project/${id}`)
+            const data = await axios.delete(`${serverUrl}/project/${id}`)
             if (data.data.deletedCount > 0) {
                 toast.success('Record deleted successfully')
                 navigate('/')

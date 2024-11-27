@@ -5,6 +5,8 @@ import BtnSecondary from './BtnSecondary'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
+const serverUrl = 'http://192.168.1.181:9000'
+
 const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, taskId = null, edit = false, refreshData }) => {
 
     const [requestor, setRequestor] = useState('')
@@ -13,7 +15,7 @@ const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, t
 
     useEffect(() => {
         if (edit && isAddTaskModalOpen) {
-            axios.get(`https://leon-prod.vercel.app:9000/project/${projectId}/task/${taskId}`)
+            axios.get(`${serverUrl}/project/${projectId}/task/${taskId}`)
                 .then((res) => {
                     setRequestor(res.data[0].task[0].requestor)
                     setTitle(res.data[0].task[0].title)
@@ -29,7 +31,7 @@ const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, t
     const handleSubmit = (e) => {
         e.preventDefault()
         if (!edit) {
-            axios.post(`https://leon-prod.vercel.app:9000/project/${projectId}/task`, { requestor, title, description: desc })
+            axios.post(`${serverUrl}/project/${projectId}/task`, { requestor, title, description: desc })
                 .then((res) => {
                     setAddTaskModal(false)
                     toast.success('Task created successfully')
@@ -45,7 +47,7 @@ const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, t
                     }
                 })
         } else {
-            axios.put(`https://leon-prod.vercel.app:9000/project/${projectId}/task/${taskId}`, { requestor,  title, description: desc })
+            axios.put(`${serverUrl}/project/${projectId}/task/${taskId}`, { requestor,  title, description: desc })
                 .then((res) => {
                     setAddTaskModal(false)
                     toast.success('Task is updated')

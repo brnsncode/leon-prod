@@ -6,9 +6,7 @@ import toast from 'react-hot-toast'
 
 
 //first later capital in javascript ?
-
-
-
+const serverUrl = 'http://192.168.1.181:9000'
 
 const TaskModal = ({ isOpen, setIsOpen, id }) => {
     const [taskData, setTaskData] = useState('')
@@ -19,7 +17,7 @@ const TaskModal = ({ isOpen, setIsOpen, id }) => {
 
     useEffect(() => {
         if (isOpen) {
-            axios.get(`https://leon-prod.vercel.app:9000/project/${id.projectId}/task/${id.id}`)
+            axios.get(`${serverUrl}/project/${id.projectId}/task/${id.id}`)
                 .then((data) => {
                     setTaskData({ ...data.data[0].task[0] });
                     // console.log(taskData);

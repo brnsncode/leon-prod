@@ -11,6 +11,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import TaskModal from "./TaskModal";
 
+const serverUrl = 'http://192.168.1.181:9000'
 
 function Task() {
 
@@ -124,7 +125,7 @@ function Task() {
 
     useEffect(() => {
         if (!isAddTaskModalOpen || isRenderChange) {
-            axios.get(`https://leon-prod.vercel.app:9000/project/${projectId}`)
+            axios.get(`${serverUrl}/project/${projectId}`)
                 .then((res) => {
                     setTitle(res.data[0].title)
                     setColumns({
@@ -167,7 +168,7 @@ function Task() {
     }, [projectId, isAddTaskModalOpen, isRenderChange]);
 
     const updateTodo = (data) => {
-        axios.put(`https://leon-prod.vercel.app:9000/project/${projectId}/todo`, data)
+        axios.put(`${serverUrl}/project/${projectId}/todo`, data)
             .then((res) => {
             }).catch((error) => {
                 toast.error('Something went wrong')
@@ -176,7 +177,7 @@ function Task() {
 
     const handleDelete = (e, taskId) => {
         e.stopPropagation();
-        axios.delete(`https://leon-prod.vercel.app:9000/project/${projectId}/task/${taskId}`)
+        axios.delete(`${serverUrl}/project/${projectId}/task/${taskId}`)
             .then((res) => {
                 toast.success('Task is deleted')
                 setRenderChange(true)

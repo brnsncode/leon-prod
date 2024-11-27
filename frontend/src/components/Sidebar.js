@@ -3,6 +3,9 @@ import AddProjectModal from './AddProjectModal';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
+
+const serverUrl = 'http://192.168.1.181:9000'
+
 const Sidebar = ({ isCollapsed }) => {
   const [isModalOpen, setModalState] = useState(false);
   const [projects, setProjects] = useState([]);
@@ -29,7 +32,7 @@ const Sidebar = ({ isCollapsed }) => {
   const closeModal = useCallback(() => setModalState(false), []);
 
   const projectData = () => {
-    axios.get('https://leon-prod.vercel.app:9000/projects/')
+    axios.get(`${serverUrl}/projects/`)
       .then((res) => {
         setProjects(res.data);
       });

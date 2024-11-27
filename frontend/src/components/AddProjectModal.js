@@ -5,6 +5,8 @@ import BtnSecondary from './BtnSecondary'
 import axios from "axios"
 import toast from 'react-hot-toast'
 
+const serverUrl = 'http://192.168.1.181:9000'
+
 const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) => {
 
     const [title, setTitle] = useState('')
@@ -12,7 +14,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
 
     useEffect(() => {
         if (edit && isModalOpen) {
-            axios.get(`https://leon-prod.vercel.app:9000/project/${id}`)
+            axios.get(`${serverUrl}/project/${id}`)
                 .then((res) => {
                     setTitle(res.data[0].title)
                     setDesc(res.data[0].description)
@@ -27,7 +29,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
     const handleSubmit = (e) => {
         e.preventDefault()
         if (!edit) {
-            axios.post('https://leon-prod.vercel.app:9000/project/', { title, description: desc })
+            axios.post(`${serverUrl}/project/`, { title, description: desc })
                 .then((res) => {
                     closeModal()
                     const customEvent = new CustomEvent('projectUpdate', { detail: { ...res.data } });
@@ -44,7 +46,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                     }
                 })
         } else {
-            axios.put(`https://leon-prod.vercel.app:9000/project/${id}`, { title, description: desc })
+            axios.put(`${serverUrl}/project/${id}`, { title, description: desc })
                 .then((res) => {
                     closeModal()
                     const customEvent = new CustomEvent('projectUpdate', { detail: { ...res.data } });
