@@ -5,7 +5,7 @@ import BtnSecondary from './BtnSecondary'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
-const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
+const serverUrl = 'https://leon-prod.onrender.com'
 
 const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, taskId = null, edit = false, refreshData }) => {
 

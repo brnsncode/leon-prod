@@ -4,7 +4,7 @@ import axios from "axios"
 import toast from 'react-hot-toast'
 import AddProjectModal from './AddProjectModal'
 
-const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
+const serverUrl = 'https://leon-prod.onrender.com'
 
 const ProjectDropdown = ({ id, navigate }) => {
     const [isModalOpen, setModalState] = useState(false)

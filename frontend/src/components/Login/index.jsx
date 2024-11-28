@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
 
-const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
+const serverUrl = 'https://leon-prod.onrender.com'
 
 const Login = () => {
 	const [data, setData] = useState({ email: "", password: "" });

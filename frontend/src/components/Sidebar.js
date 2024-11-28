@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 
-const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://localhost:9000';
+const serverUrl = 'https://leon-prod.onrender.com'
 
 const Sidebar = ({ isCollapsed }) => {
   const [isModalOpen, setModalState] = useState(false);
