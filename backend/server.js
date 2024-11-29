@@ -6,6 +6,9 @@ import cors from "cors";
 import userRoutes from "./routes/users.js";
 import authRoutes from "./routes/auth.js";
 
+import authMiddleware from "./middleware/authMiddleware.js";
+
+
 dotenv.config()
 
 // const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
@@ -16,19 +19,20 @@ mongoose.connect(process.env.MONGODB_URI, () => {
 
 
 const PORT = process.env.SERVER_PORT || 9000
-const origin = process.env.CORS_ORIGIN //|| 'http://192.168.1.181:3000'
+const origin = process.env.CORS_ORIGIN 
 
 const app = express()
 
 app.use(cors({
     origin
 }));
+
 app.use(express.json())
 app.use(express.urlencoded())
 
-app.use(projectRoutes)
 app.use("/api/auth", authRoutes)
-app.use("/api/users",userRoutes)
+app.use("/api/users", userRoutes);
+app.use(authMiddleware, projectRoutes);
 
 // Auth routes
 // app.use("/api/users", userRoutes);

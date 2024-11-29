@@ -4,14 +4,21 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 
-const serverUrl = 'https://leon-prod.onrender.com'
+const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://192.168.1.181:9000'
+
+const user = localStorage.getItem("token"); // Check if user is logged in
+
+//added authentication for frontend validation to pass to backend middleware
+const authHeaders = {
+  headers: {
+    Authorization: `Bearer ${user}`,
+  },
+};
 
 const Sidebar = ({ isCollapsed }) => {
   const [isModalOpen, setModalState] = useState(false);
   const [projects, setProjects] = useState([]);
   const [paramsWindow, setParamsWindow] = useState(window.location.pathname.slice(1));
-
-  const user = localStorage.getItem("token"); // Check if user is logged in
 
   useEffect(() => {
     if (user) {
@@ -32,7 +39,7 @@ const Sidebar = ({ isCollapsed }) => {
   const closeModal = useCallback(() => setModalState(false), []);
 
   const projectData = () => {
-    axios.get(`${serverUrl}/projects/`)
+    axios.get(`${serverUrl}/projects/`, authHeaders)
       .then((res) => {
         setProjects(res.data);
       });
@@ -58,7 +65,7 @@ const Sidebar = ({ isCollapsed }) => {
           </button>
         </div>
       )}
-      
+
       {/* Projects List - hidden if sidebar is collapsed */}
       {!isCollapsed && (
         <ul className='border-r border-gray-300 pr-2'>

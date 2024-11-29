@@ -6,7 +6,15 @@ import toast from 'react-hot-toast'
 
 
 //first later capital in javascript ?
-const serverUrl = 'https://leon-prod.onrender.com'
+const serverUrl = 'http://192.168.1.181:9000'
+const user = localStorage.getItem("token"); // Check if user is logged in
+
+//added authentication for frontend validation to pass to backend middleware
+const authHeaders = {
+  headers: {
+    Authorization: `Bearer ${user}`,
+  },
+};
 
 const TaskModal = ({ isOpen, setIsOpen, id }) => {
     const [taskData, setTaskData] = useState('')
@@ -17,7 +25,7 @@ const TaskModal = ({ isOpen, setIsOpen, id }) => {
 
     useEffect(() => {
         if (isOpen) {
-            axios.get(`${serverUrl}/project/${id.projectId}/task/${id.id}`)
+            axios.get(`${serverUrl}/project/${id.projectId}/task/${id.id}`, authHeaders)
                 .then((data) => {
                     setTaskData({ ...data.data[0].task[0] });
                     // console.log(taskData);

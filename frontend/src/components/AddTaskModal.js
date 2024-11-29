@@ -5,7 +5,16 @@ import BtnSecondary from './BtnSecondary'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
-const serverUrl = 'https://leon-prod.onrender.com'
+const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://192.168.1.181:9000'
+
+const user = localStorage.getItem("token"); // Check if user is logged in
+
+//added authentication for frontend validation to pass to backend middleware
+const authHeaders = {
+  headers: {
+    Authorization: `Bearer ${user}`,
+  },
+};
 
 const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, taskId = null, edit = false, refreshData }) => {
 
@@ -15,7 +24,7 @@ const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, t
 
     useEffect(() => {
         if (edit && isAddTaskModalOpen) {
-            axios.get(`${serverUrl}/project/${projectId}/task/${taskId}`)
+            axios.get(`${serverUrl}/project/${projectId}/task/${taskId}`, authHeaders)
                 .then((res) => {
                     setRequestor(res.data[0].task[0].requestor)
                     setTitle(res.data[0].task[0].title)
@@ -31,7 +40,7 @@ const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, t
     const handleSubmit = (e) => {
         e.preventDefault()
         if (!edit) {
-            axios.post(`${serverUrl}/project/${projectId}/task`, { requestor, title, description: desc })
+            axios.post(`${serverUrl}/project/${projectId}/task`, { requestor, title, description: desc }, authHeaders)
                 .then((res) => {
                     setAddTaskModal(false)
                     toast.success('Task created successfully')
@@ -47,7 +56,7 @@ const AddTaskModal = ({ isAddTaskModalOpen, setAddTaskModal, projectId = null, t
                     }
                 })
         } else {
-            axios.put(`${serverUrl}/project/${projectId}/task/${taskId}`, { requestor,  title, description: desc })
+            axios.put(`${serverUrl}/project/${projectId}/task/${taskId}`, { requestor,  title, description: desc }, authHeaders)
                 .then((res) => {
                     setAddTaskModal(false)
                     toast.success('Task is updated')

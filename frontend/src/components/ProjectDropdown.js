@@ -4,13 +4,22 @@ import axios from "axios"
 import toast from 'react-hot-toast'
 import AddProjectModal from './AddProjectModal'
 
-const serverUrl = 'https://leon-prod.onrender.com'
+const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://192.168.1.181:9000'
+
+const user = localStorage.getItem("token"); // Check if user is logged in
+
+//added authentication for frontend validation to pass to backend middleware
+const authHeaders = {
+  headers: {
+    Authorization: `Bearer ${user}`,
+  },
+};
 
 const ProjectDropdown = ({ id, navigate }) => {
     const [isModalOpen, setModalState] = useState(false)
     const handleDelete = async () => {
         try {
-            const data = await axios.delete(`${serverUrl}/project/${id}`)
+            const data = await axios.delete(`${serverUrl}/project/${id}`, authHeaders)
             if (data.data.deletedCount > 0) {
                 toast.success('Record deleted successfully')
                 navigate('/')

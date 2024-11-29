@@ -11,7 +11,16 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import TaskModal from "./TaskModal";
 
-const serverUrl = 'https://leon-prod.onrender.com'
+const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://192.168.1.181:9000'
+
+const user = localStorage.getItem("token"); // Check if user is logged in
+
+//added authentication for frontend validation to pass to backend middleware
+const authHeaders = {
+  headers: {
+    Authorization: `Bearer ${user}`,
+  },
+};
 
 function Task() {
 
@@ -125,7 +134,7 @@ function Task() {
 
     useEffect(() => {
         if (!isAddTaskModalOpen || isRenderChange) {
-            axios.get(`${serverUrl}/project/${projectId}`)
+            axios.get(`${serverUrl}/project/${projectId}`, authHeaders)
                 .then((res) => {
                     setTitle(res.data[0].title)
                     setColumns({
@@ -168,7 +177,7 @@ function Task() {
     }, [projectId, isAddTaskModalOpen, isRenderChange]);
 
     const updateTodo = (data) => {
-        axios.put(`${serverUrl}/project/${projectId}/todo`, data)
+        axios.put(`${serverUrl}/project/${projectId}/todo`, data, authHeaders)
             .then((res) => {
             }).catch((error) => {
                 toast.error('Something went wrong')
@@ -177,7 +186,7 @@ function Task() {
 
     const handleDelete = (e, taskId) => {
         e.stopPropagation();
-        axios.delete(`${serverUrl}/project/${projectId}/task/${taskId}`)
+        axios.delete(`${serverUrl}/project/${projectId}/task/${taskId}`, authHeaders)
             .then((res) => {
                 toast.success('Task is deleted')
                 setRenderChange(true)

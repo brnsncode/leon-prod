@@ -5,7 +5,16 @@ import BtnSecondary from './BtnSecondary'
 import axios from "axios"
 import toast from 'react-hot-toast'
 
-const serverUrl = 'https://leon-prod.onrender.com'
+const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://192.168.1.181:9000'
+
+const user = localStorage.getItem("token"); // Check if user is logged in
+
+//added authentication for frontend validation to pass to backend middleware
+const authHeaders = {
+  headers: {
+    Authorization: `Bearer ${user}`,
+  },
+};
 
 const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) => {
 
@@ -14,7 +23,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
 
     useEffect(() => {
         if (edit && isModalOpen) {
-            axios.get(`${serverUrl}/project/${id}`)
+            axios.get(`${serverUrl}/project/${id}`, authHeaders)
                 .then((res) => {
                     setTitle(res.data[0].title)
                     setDesc(res.data[0].description)
@@ -29,7 +38,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
     const handleSubmit = (e) => {
         e.preventDefault()
         if (!edit) {
-            axios.post(`${serverUrl}/project/`, { title, description: desc })
+            axios.post(`${serverUrl}/project/`, { title, description: desc }, authHeaders)
                 .then((res) => {
                     closeModal()
                     const customEvent = new CustomEvent('projectUpdate', { detail: { ...res.data } });
@@ -46,7 +55,7 @@ const AddProjectModal = ({ isModalOpen, closeModal, edit = false, id = null }) =
                     }
                 })
         } else {
-            axios.put(`${serverUrl}/project/${id}`, { title, description: desc })
+            axios.put(`${serverUrl}/project/${id}`, { title, description: desc }, authHeaders)
                 .then((res) => {
                     closeModal()
                     const customEvent = new CustomEvent('projectUpdate', { detail: { ...res.data } });
