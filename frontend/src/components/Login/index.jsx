@@ -5,11 +5,18 @@ import styles from "./styles.module.css";
 
 const serverUrl = process.env.REACT_APP_API_BASE_URL || 'http://192.168.1.181:9000'
 //auth headers not needed in this section - due to pre auth steps
+//
+//
 
 const Login = () => {
 	const [data, setData] = useState({ email: "", password: "" });
 	const [error, setError] = useState("");
 
+	// Convert email to lowercase
+	const lowercasedData = {
+		...data,
+		email: data.email.toLowerCase(),
+	};
 	const handleChange = ({ currentTarget: input }) => {
 		setData({ ...data, [input.name]: input.value });
 	};
@@ -18,7 +25,7 @@ const Login = () => {
 		e.preventDefault();
 		try {
 			const url = `${serverUrl}/api/auth`;
-			const { data: res } = await axios.post(url, data);
+			const { data: res } = await axios.post(url, lowercasedData);
 			localStorage.setItem("token", res.data);
 			window.location = "/";
 		} catch (error) {
