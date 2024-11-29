@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import userRoutes from "./routes/users.js";
 import authRoutes from "./routes/auth.js";
+import statusRoutes from "./routes/status.js";
 
 import authMiddleware from "./middleware/authMiddleware.js";
 
@@ -30,9 +31,25 @@ app.use(cors({
 app.use(express.json())
 app.use(express.urlencoded())
 
+// Have status endpoint available first
+// Status endpoint to keep the app awake, with try-catch for error handling
+app.get("/api/status", async (req, res) => {
+    try {
+        // Simulate success response for status check
+        res.status(200).send("App is running.");
+    } catch (error) {
+        console.error('Error occurred in /status route:', error);
+        res.status(500).send("Internal server error.");
+    }
+});
+
+//First api auth
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes);
+
+//Then lock auth routes
 app.use(authMiddleware, projectRoutes);
+
 
 // Auth routes
 // app.use("/api/users", userRoutes);
