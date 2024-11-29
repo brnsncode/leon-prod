@@ -50,6 +50,34 @@ function Task() {
     //     }
     // };
 
+    const getBadgeStyles = (column) => {
+        const capacityReachingLimit = sumCapacity(column.items) >= 60;
+        const capacityExceedsLimit = sumCapacity(column.items) >= 100;
+        const isColumnInProgress = column.name === "In Progress";
+        const isColumnUnderReview = column.name === "Waiting For Review";
+      
+        if (column.items.length < 1) {
+          return 'invisible';
+        }
+        if (capacityExceedsLimit && isColumnInProgress) {
+            return 'text-white bg-red-500';
+        }
+        if (capacityReachingLimit && isColumnInProgress) {
+          return 'text-white bg-yellow-500';
+        }
+        
+        if (capacityExceedsLimit && isColumnUnderReview) {
+            return 'text-white bg-red-500';
+        }
+        if (capacityReachingLimit && isColumnUnderReview) {
+            return 'text-white bg-yellow-500';
+        }
+
+      
+        return 'text-gray-500 border-gray-300';
+      };
+      
+
     const onDragEnd = (result, columns, setColumns) => {
         if (!result.destination) return;
         const { source, destination } = result;
@@ -236,10 +264,14 @@ function Task() {
                                     <div className="inline-flex items-center space-x-2">
                                         <h2 className=" text-[#1e293b] font-medium text-sm uppercase leading-3">{column.name}</h2>
                                         <span className={`h-5 inline-flex items-center justify-center px-2 mb-[2px] leading-none rounded-full text-xs font-semibold text-gray-500 border border-gray-300 ${column.items.length < 1 && 'invisible'}`}>{column.items?.length}</span>
-                                        <span className={`h-5 inline-flex items-center justify-center px-2 mb-[2px] leading-none rounded-full text-xs font-semibold ${sumCapacity(column.items) >= 60 ? 'text-white bg-red-500' : 'text-gray-500 border-gray-300'} border ${column.items.length < 1 && 'invisible'}`}>{sumCapacity(column.items)}</span>
+                                        
 
                                     </div>
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width={15} className="text-[#9ba8bc]" viewBox="0 0 448 512"><path d="M120 256c0 30.9-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56zm160 0c0 30.9-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56zm104 56c-30.9 0-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56s-25.1 56-56 56z" /></svg>
+                                    {/* <span className={`h-5 inline-flex items-center justify-center px-2 mb-[2px] leading-none rounded-full text-xs font-semibold ${sumCapacity(column.items) >= 60 ? 'text-white bg-red-500' : 'text-gray-500 border-gray-300'} border ${column.items.length < 1 && 'invisible'}`}>{sumCapacity(column.items)}</span> */}
+                                    <span className={`h-5 inline-flex items-center justify-center px-2 mb-[2px] leading-none rounded-full text-xs font-semibold ${getBadgeStyles(column)} border`}>
+                                        {sumCapacity(column.items)}
+                                    </span>
+                                    {/* <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" width={15} className="text-[#9ba8bc]" viewBox="0 0 448 512"><path d="M120 256c0 30.9-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56zm160 0c0 30.9-25.1 56-56 56s-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56zm104 56c-30.9 0-56-25.1-56-56s25.1-56 56-56s56 25.1 56 56s-25.1 56-56 56z" /></svg> */}
                                 </div>
                                 <div>
                                     <Droppable droppableId={columnId} key={columnId}>

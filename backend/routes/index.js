@@ -151,47 +151,93 @@ projectRoutes.get('/project/:id/task/:taskId', async (req, res) => {
 
 })
 
+//BACKUP
+// projectRoutes.put('/project/:id/task/:taskId', async (req, res) => {
 
+//     if (!req.params.id || !req.params.taskId) return res.status(500).send(`server error`);
+
+//     const task = joi.object({
+//         requestor: joi.string().min(3).max(100).required(),
+//         title: joi.string().min(3).max(100).required(),
+//         description: joi.string().required(),
+//     })
+
+//     const { error, value } = task.validate({ requestor: req.body.requestor, title: req.body.title, description: req.body.description });
+//     if (error) return res.status(422).send(error)
+
+//     try {
+//         // const data = await Project.find({ $and: [{ _id: mongoose.Types.ObjectId(req.params.id) }, { "task._id": mongoose.Types.ObjectId(req.params.taskId) }] },{
+//         //     task: {
+//         //         $filter: {
+//         //             input: "$task",
+//         //             as: "task",
+//         //             cond: {
+//         //                 $in: [
+//         //                     "$$task._id",
+//         //                     [
+//         //                         mongoose.Types.ObjectId(req.params.taskId)
+//         //                     ]
+//         //                 ]
+//         //             }
+//         //         }
+//         //     }
+//         // })
+//         const data = await Project.updateOne({
+//             _id: mongoose.Types.ObjectId(req.params.id),
+//             task: { $elemMatch: { _id: mongoose.Types.ObjectId(req.params.taskId) } }
+//         }, { $set: { "task.$.requestor": value.requestor, "task.$.title": value.title, "task.$.description": value.description } })
+//         return res.send(data)
+//     } catch (error) {
+//         return res.send(error)
+//     }
+
+// })
 projectRoutes.put('/project/:id/task/:taskId', async (req, res) => {
+    if (!req.params.id || !req.params.taskId) {
+        return res.status(500).send(`server error`);
+    }
 
-    if (!req.params.id || !req.params.taskId) return res.status(500).send(`server error`);
-
-    const task = joi.object({
+    // Joi validation for the task object
+    const taskSchema = joi.object({
         requestor: joi.string().min(3).max(100).required(),
         title: joi.string().min(3).max(100).required(),
         description: joi.string().required(),
-    })
+    });
 
-    const { error, value } = task.validate({ requestor: req.body.requestor, title: req.body.title, description: req.body.description });
-    if (error) return res.status(422).send(error)
+    const { error, value } = taskSchema.validate({
+        requestor: req.body.requestor,
+        title: req.body.title,
+        description: req.body.description,
+    });
 
-    try {
-        // const data = await Project.find({ $and: [{ _id: mongoose.Types.ObjectId(req.params.id) }, { "task._id": mongoose.Types.ObjectId(req.params.taskId) }] },{
-        //     task: {
-        //         $filter: {
-        //             input: "$task",
-        //             as: "task",
-        //             cond: {
-        //                 $in: [
-        //                     "$$task._id",
-        //                     [
-        //                         mongoose.Types.ObjectId(req.params.taskId)
-        //                     ]
-        //                 ]
-        //             }
-        //         }
-        //     }
-        // })
-        const data = await Project.updateOne({
-            _id: mongoose.Types.ObjectId(req.params.id),
-            task: { $elemMatch: { _id: mongoose.Types.ObjectId(req.params.taskId) } }
-        }, { $set: { "task.$.requestor": value.requestor, "task.$.title": value.title, "task.$.description": value.description } })
-        return res.send(data)
-    } catch (error) {
-        return res.send(error)
+    if (error) {
+        return res.status(422).send(error);
     }
 
-})
+    try {
+        // Update the specific task within the project's tasks array
+        const updateResult = await Project.updateOne(
+            {
+                _id: mongoose.Types.ObjectId(req.params.id), // Match the project by ID
+                "task._id": mongoose.Types.ObjectId(req.params.taskId), // Match the specific task by ID
+            },
+            {
+                $set: {
+                    "task.$.requestor": value.requestor,
+                    "task.$.title": value.title,
+                    "task.$.description": value.description,
+                    "task.$.updatedAt": new Date(), // Update only the matched task's updatedAt field
+                },
+            }
+        );
+
+        return res.send(updateResult);
+    } catch (error) {
+        console.error("Error updating task:", error);
+        return res.status(500).send({ error: "Internal server error" });
+    }
+});
+
 
 projectRoutes.delete('/project/:id/task/:taskId', async (req, res) => {
 

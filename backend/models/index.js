@@ -11,13 +11,15 @@ const TaskSchema = new mongoose.Schema(
     order: Number,
     stage: String,
     isOneList: Boolean,
-    capacity: { type: Number, default: 10 },
+    capacity: { type: Number, default: 20 },
+    updatedAt: { type: Date, default: Date.now }, // Manual handling
     index: Number,
     attachment: [
       { type: String, url: String }
     ],
   },
-  { timestamps: true } // Adds `createdAt` and `updatedAt` automatically to each task
+  
+  // { timestamps: true } // Adds `createdAt` and `updatedAt` automatically to each task
 );
 
 // Define the ProjectSchema, embedding TaskSchema as a subdocument
